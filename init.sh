@@ -10,16 +10,20 @@ checkVars() {
 checkVars "$2" "Usage: exe <FILETYPE> <LOCATION> [additional parameters]"
 
 LOCATION=$2
-REPO="https://github.com/baabelfish/"
+REPO="https://github.com/baabelfish"
+
+initDir() {
+    git clone --depth=1 "${REPO}/template-${1}" "$LOCATION"
+    cd "$LOCATION"
+    rm -rf .git
+    git init
+}
 
 case "$1" in
     cpp)
-        echo "Initializing C++ project to $LOCATION"
-        rm -rf "$LOCATION" # FIXME REMOVE
-        git clone --depth=1 "$REPO/template-cpp" "$LOCATION"
-        cd "$LOCATION"
-        rm -rf .git
-        git init
+        echo "Initializing C++ project in $LOCATION"
+
+        initDir $1
 
         mkdir lib
         cd lib

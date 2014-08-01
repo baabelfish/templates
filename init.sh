@@ -9,11 +9,28 @@ checkVars() {
 
 checkVars "$2" "Usage: exe <FILETYPE> <LOCATION> [additional parameters]"
 
-SCRIPT="scripts/${1}.sh"
+LOCATION=$2
+REPO="https://github.com/baabelfish/"
 
-if [[ ! -e $SCRIPT ]]; then
-    echo "No such file"
-    exit 2
-else
-    ./$SCRIPT $*
-fi
+case "$1" in
+    cpp)
+        echo "Initializing C++ project to $LOCATION"
+        rm -rf "$LOCATION" # FIXME REMOVE
+        git clone --depth=1 "$REPO/template-cpp" "$LOCATION"
+        cd "$LOCATION"
+        rm -rf .git
+        git init
+
+        mkdir lib
+        cd lib
+        git submodule add "$REPO/ytest"
+
+        cd ..
+        cmake . && make
+        ./ytest
+        ;;
+    *)
+        echo "No such filetype"
+        exit 2
+        ;;
+esac

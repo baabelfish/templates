@@ -17,6 +17,7 @@ initDir() {
     cd "$LOCATION"
     rm -rf .git
     git init
+    git add .
 }
 
 case "$1" in
